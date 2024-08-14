@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>trios?</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    #login-form {
+      display: none; /* Hide the form initially */
+    }
+    #timer {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Its coming soon!</h1>
+    <h3 align="center" id="timer"></h3>
+    <form id="login-form">
+      <div class="input-box">
+        <input type="password" placeholder="Password" id="password" required>
+        <i class='bx bxs-lock-alt'></i>
+      </div>
+      <button type="submit" id="button" class="btn">Login</button>
+    </form>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js"></script>
+  <script type="text/javascript">
+  "use strict";
+
+  var form = document.getElementById('login-form');
+  var button = document.getElementById('button');
+  var password = document.getElementById('password');
+
+  function login(secret) {
+    var hash = sha1(secret);
+    var url = hash + "/index.html";
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = function () {
+      if (request.status >= 200 && request.status < 400) {
+        window.location = url;
+      } else {
+        alert("Wrong password");
+      }
+    };
+    request.onerror = function () {
+      alert("Wrong password");
+    };
+    request.send();
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent form submission
+    login(password.value);
+  });
+
+  document.onkeydown = function (e) {
+    e = e || window.event;
+    if (e.keyCode == 13) {
+      e.preventDefault(); // Prevent form submission on Enter key
+      login(password.value);
+    }
+  };
+
+  const countdownDate = new Date("2024-08-28T00:00:00").getTime();
+
+  // Update the countdown every 1 second
+  const x = setInterval(function() {
+    // Get the current date and time
+    const now = new Date().getTime();
+    
+    // Calculate the remaining time
+    const distance = countdownDate - now;
+    
+    // Calculate days, hours, minutes, and seconds
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    // Display the result in the element with id="timer"
+    document.getElementById("timer").innerHTML = 
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    
+    // If the countdown is finished, display the form and hide the timer
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("timer").innerHTML = "";
+        document.getElementById('login-form').style.display = 'block'; // Show the form
+    }
+  }, 1000);
+
+  </script>
+</body>
+</html>
